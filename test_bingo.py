@@ -31,14 +31,23 @@ class TestBingo(unittest.TestCase):
                 assert bingo.check_column(self.data) == 1
             if i == 21:
                 assert bingo.check_column(self.data) == 2
+            if i == 22:
+                assert bingo.check_column(self.data) == 3
 
     def test_row(self):
         for i in range(0, len(self.num)):
             self.data[self.data.index(self.num[i])] = True
-            
+            if i == 12:
+                assert bingo.check_column(self.data) == 0
+            if i == 16:
+                assert bingo.check_column(self.data) == 1
+            if i == 21:
+                assert bingo.check_column(self.data) == 2
+            if i == 23:
+                assert bingo.check_column(self.data) == 3
 
     def test_bingo_search(self):
-        pass
+        assert bingo.bingo_search(num=self.num, data=self.data) == 22
 
 
 if __name__ == '__main__':
