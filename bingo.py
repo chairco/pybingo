@@ -61,12 +61,16 @@ def caculate(data, split=split, count=0):
     return count
 
 
-def bingo_search(num, data):
+def check_size(num, data, success, split):
+    pass
+
+
+def bingo_search(num, data, success=success, split=split):
     for i in range(0, len(num)):
         # print(i)
         data[data.index(num[i])] = True
         if i >= 12:  # start check, 5*5=13
-            rol = 0  # check_row(data)
+            rol = check_row(data)
             col = check_column(data)
             if rol + col >= success:  # 計算成功數
                 return i
@@ -82,7 +86,7 @@ def main(datas=datas, split=split, order=False):
     #print(datas)
     result = dict()  # 計算每個人到第幾步贏 bingo
     for k, v in datas.items():
-        result.setdefault(k, bingo_search(num, data=v))
+        result.setdefault(k, bingo_search(num=num, data=v))
     if order:
         return result  # 結果
     else:
