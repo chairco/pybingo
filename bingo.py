@@ -5,9 +5,9 @@ n = 5  # 人數
 success = 3  # bingo 數
 split = 5
 size = split * split  # 大小
+num = random.sample(range(size), size)  # 題目順序
 datas = dict(zip([chr(w) for w in range(97, 97 + n)],
                  [random.sample(range(size), size) for i in range(0, n)]))  # 所有人畫的
-num = random.sample(range(size), size)  # 題目順序
 
 
 def check_row(array, split=split):
@@ -66,7 +66,7 @@ def check_size(num, data, split=5):
     return True
 
 
-def bingo_search(num, data, success=success, split=split):
+def bingo_search(num, data, split, success=success):
     """search bingo
     :types: num: list
     :types: data: list
@@ -83,7 +83,7 @@ def bingo_search(num, data, success=success, split=split):
                     return i
 
 
-def main(datas=datas, split=split, order=False):
+def main(num=num, datas=datas, split=split, order=False):
     """main function
     :types: datas: dict: {user: value}
     :types: split: int: size of the graph
@@ -92,7 +92,7 @@ def main(datas=datas, split=split, order=False):
     """
     result = dict()  # 計算每個人到第幾步贏 bingo
     for k, v in datas.items():
-        result.setdefault(k, bingo_search(num=num, data=v))
+        result.setdefault(k, bingo_search(num=num, data=v, split=split))
     if order:
         return result  # 結果
     else:

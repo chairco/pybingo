@@ -50,7 +50,7 @@ class TestBingo(unittest.TestCase):
         assert bingo.check_size(num=self.num, data=self.data) == True
 
     def test_bingo_search(self):
-        assert bingo.bingo_search(num=self.num, data=self.data) == 21
+        assert bingo.bingo_search(num=self.num, data=self.data, split=5) == 21
 
 
 if __name__ == '__main__':
