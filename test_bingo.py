@@ -46,6 +46,9 @@ class TestBingo(unittest.TestCase):
             if i == 23:
                 assert bingo.check_column(self.data) == 3
 
+    def test_check_size(self):
+        assert bingo.check_size(num=self.num, data=self.data) == True
+
     def test_bingo_search(self):
         assert bingo.bingo_search(num=self.num, data=self.data) == 21
 

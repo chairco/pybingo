@@ -7,11 +7,7 @@ split = 5
 size = split * split  # 大小
 datas = dict(zip([chr(w) for w in range(97, 97 + n)],
                  [random.sample(range(size), size) for i in range(0, n)]))  # 所有人畫的
-# datas = {'a': [10, 5, 24, 6, 18, 11, 3, 13, 7, 15, 12,
-#               2, 16, 23, 21, 14, 20, 19, 17, 0, 9, 4, 22, 8, 1]}
 num = random.sample(range(size), size)  # 題目順序
-# num = [19, 23, 9, 7, 6, 10, 14, 8, 15, 2, 20, 18, 13,
-#       4, 17, 21, 12, 0, 22, 1, 3, 11, 5, 16, 24]  # 題目順序
 
 
 def check_row(array, split=split):
@@ -61,19 +57,30 @@ def caculate(data, split=split, count=0):
     return count
 
 
-def check_size(num, data, success, split):
-    pass
+def check_size(num, data, split=5):
+    size = split * split
+    if len(num) != size:
+        raise ValueError(f"answer;s data {num} not equal {size}.")
+    if len(data) != size:
+        raise ValueError(f"user's data = {data}, not equal {size}.")
+    return True
 
 
 def bingo_search(num, data, success=success, split=split):
-    for i in range(0, len(num)):
-        # print(i)
-        data[data.index(num[i])] = True
-        if i >= 12:  # start check, 5*5=13
-            rol = check_row(data)
-            col = check_column(data)
-            if rol + col >= success:  # 計算成功數
-                return i
+    """search bingo
+    :types: num: list
+    :types: data: list
+    :types: success: int
+    :rtype: split: int
+    """
+    if check_size(num=num, data=data, split=split):  # check data current
+        for i in range(0, len(num)):
+            data[data.index(num[i])] = True
+            if i >= 12:  # start check, min cross line
+                rol = check_row(data)
+                col = check_column(data)
+                if rol + col >= success:  # 加總成功數
+                    return i
 
 
 def main(datas=datas, split=split, order=False):
@@ -83,7 +90,6 @@ def main(datas=datas, split=split, order=False):
     :types: order: bool: order by value
     :rtype: order_result: dict
     """
-    #print(datas)
     result = dict()  # 計算每個人到第幾步贏 bingo
     for k, v in datas.items():
         result.setdefault(k, bingo_search(num=num, data=v))
