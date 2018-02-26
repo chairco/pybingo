@@ -98,7 +98,11 @@ def bingo_search(num, data, split, success):
     """
     if check_size(num=num, data=data, split=split) and check_success(split=split, success=success):  # check data current and success
         for i in range(0, len(num)):
-            data[data.index(num[i])] = True
+            if num[i] is 1:  # Fix bug, list.index(True) == list.index(1)
+                idx = [idx for idx, value in enumerate(data) if value is 1]
+                data[idx[0]] = True
+            else:
+                data[data.index(num[i])] = True
             if i >= split:  # (TODO) start check, min cross line
                 rol = check_row(data)
                 col = check_column(data)

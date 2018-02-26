@@ -11,18 +11,17 @@ class TestBingo(unittest.TestCase):
 
     def log(self, msg):
         objid = hex(id(self))
-        print("<{}>: {} -- {}".format(objid, msg, self._testMethodName))
+        print(f"<<{objid}>>: {msg} -- {self._testMethodName}")
 
     def setUp(self):
-        # data 1
         self.data = [10, 5, 24, 6, 18, 11, 3, 13, 7, 15, 12,
                      2, 16, 23, 21, 14, 20, 19, 17, 0, 9, 4, 22, 8, 1]  # user's bingo
+        # num 1: normal data
         self.num = [19, 23, 9, 7, 6, 10, 14, 8, 15, 2, 20, 18,  # answer's bingo
                     13, 4, 17, 21, 12, 0, 22, 1, 3, 11, 5, 16, 24]
-
-        # 完美的資料
-        #num = [1, 24, 18, 3, 13, 7, 16, 20, 19, 17, 9, 22, 10, 5, 6, 11, 15, 12, 2, 23, 21, 14, 0, 4, 8]
-        #datas = {'a': [10, 5, 24, 6, 18, 11, 3, 13, 7, 15, 12, 2, 16, 23, 21, 14, 20, 19, 17, 0, 9, 4, 22, 8, 1]}
+        # num 2: prefect data
+        self.num2 = [10, 24, 18, 3, 13, 7, 16, 20, 19, 17, 9,
+                     22, 1, 5, 6, 11, 15, 12, 2, 23, 21, 14, 0, 4, 8]
 
     def tearDown(self):
         self.log('tearDownnvoked.')
@@ -53,13 +52,16 @@ class TestBingo(unittest.TestCase):
 
     def test_check_size(self):
         assert bingo.check_size(num=self.num, data=self.data) == True
+        assert bingo.check_size(num=self.num2, data=self.data) == True
 
     def test_check_success(self):
         assert bingo.check_success(split=5, success=3) == True
 
     def test_bingo_search(self):
         assert bingo.bingo_search(
-            num=self.num, data=self.data, split=5, success=3) == 22
+            num=self.num, data=list(self.data), split=5, success=3) == 20
+        assert bingo.bingo_search(
+            num=self.num2, data=list(self.data), split=5, success=3) == 13
 
 
 if __name__ == '__main__':
