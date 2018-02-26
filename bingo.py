@@ -47,13 +47,30 @@ def check_column(array, split=split):
     return count
 
 
-def caculate(data, split=split, count=0):
+def check_hypotenuse(array, split=split):
+    # print('checko_hypotenuse')
+    f = lambda a: map(lambda b: a[b:b + 5],
+                      range(0, len(a) - 2, split))  # 建立 hypotenuse 的 view
+    h, h_reverse = [], []
+    for idx, value in enumerate(f(array)):
+        h.append(value[idx])
+        h_reverse.append(value[::-1][idx])
+    count = caculate(data=[h], split=split) + caculate(data=[h_reverse], split=split)
+    return count
+
+
+def caculate(data, split, count=0):
+    """
+    :types: data: list in list
+    :types: split: int 
+    :types: count: int
+    """
     for idx, value in enumerate(data):
         # fix bug(#10), remove sum(i) cause caculate 1
         if len([b for b in value if b is True]) == split:
             count += 1
-        # print(f"idx: {idx}, count: {count}, {value}")
-    # print('-'*10)
+        #print(f"idx: {idx}, count: {count}, {value}")
+    #print('-'*10)
     return count
 
 
@@ -66,33 +83,42 @@ def check_size(num, data, split=5):
     return True
 
 
-def bingo_search(num, data, split, success=success):
+def check_success(split, success):
+    if success > split * 2:
+        raise ValueError(f'{success} more than the {split*2}')
+    return True
+
+
+def bingo_search(num, data, split, success):
     """search bingo
     :types: num: list
     :types: data: list
     :types: success: int
     :rtype: split: int
     """
-    if check_size(num=num, data=data, split=split):  # check data current
+    if check_size(num=num, data=data, split=split) and check_success(split=split, success=success):  # check data current and success
         for i in range(0, len(num)):
             data[data.index(num[i])] = True
-            if i >= 12:  # start check, min cross line
+            if i >= split:  # (TODO) start check, min cross line
                 rol = check_row(data)
                 col = check_column(data)
-                if rol + col >= success:  # 加總成功數
-                    return i
+                hyp = check_hypotenuse(data)
+                if rol + col + hyp >= success:  # 加總成功數
+                    return i + 1
 
 
-def main(num=num, datas=datas, split=split, order=False):
+def main(num=num, datas=datas, split=split, success=success, order=False):
     """main function
     :types: datas: dict: {user: value}
     :types: split: int: size of the graph
+    :types: success: cross line
     :types: order: bool: order by value
     :rtype: order_result: dict
     """
     result = dict()  # 計算每個人到第幾步贏 bingo
     for k, v in datas.items():
-        result.setdefault(k, bingo_search(num=num, data=v, split=split))
+        result.setdefault(k, bingo_search(
+            num=num, data=v, split=split, success=success))
     if order:
         return result  # 結果
     else:
